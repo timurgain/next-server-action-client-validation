@@ -1,0 +1,1 @@
+export { UserRegisterForm } from './ui/UserRegisterForm';
