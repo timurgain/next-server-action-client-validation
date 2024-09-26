@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-self: flex-start;
+  border: none;
+  gap: 10px;
+  width: 100%;
+  padding: 5px 0;
+}
+
+.legend {
+  display: block;
+}
