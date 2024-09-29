@@ -6,4 +6,13 @@
   width: 100%;
   padding: 5px;
   cursor: pointer;
+
+  &:hover {
+    background: #f0f0f0;
+  }
+
+  &:disabled {
+    background: #f0f0f0;
+    cursor: not-allowed;
+  }
 }

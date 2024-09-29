@@ -5,7 +5,7 @@ import styles from './UserRegisterForm.module.scss';
 import { Button } from '@/shared/ui/Button/Button';
 import { createUser } from '../actions';
 import { Fields } from '../types';
-import { useFormState } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
 import { useEffect } from 'react';
 
 type Props = {}
@@ -13,10 +13,14 @@ type Props = {}
 export function UserRegisterForm({}: Props) {
 
   const [state, action] = useFormState(createUser, undefined);
+  const { pending } = useFormStatus()
 
   useEffect(() => {
     if (state?.message) {
       alert(state.message);
+    }
+    if (state?.mockTokens) {
+      alert(JSON.stringify(state.mockTokens))
     }
   }, [state]);
 
@@ -26,7 +30,7 @@ export function UserRegisterForm({}: Props) {
       <Input name={Fields.email} label='Email' type='email' error={state?.errors?.email}/>
       <Input name={Fields.password} label='Password' type='password' error={state?.errors?.password}/>
 
-      <Button type='submit'>Submit</Button>
+      <Button type='submit' disabled={pending}>Submit</Button>
     </form>
   )
 }

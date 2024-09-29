@@ -19,6 +19,7 @@ export function RegistrationForm({}: Props) {
 
   return (
     <section className={styles.section}>
+
       <RadioFieldset legend="Choose a type">
         <RadioInput
           name={LegalStatuses.user}
@@ -42,6 +43,7 @@ export function RegistrationForm({}: Props) {
 
       {isUser && <UserRegisterForm />}
       {isCompany && <p>Not implemented</p>}
+      
     </section>
   );
 }
