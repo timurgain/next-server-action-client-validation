@@ -1,10 +1,10 @@
-import styles from "./page.module.css";
 import { RegistrationForm } from "@/widgets/RegistrationForm";
 
 export default function SignUpPage() {
   return (
-    <main className={styles.main}>
+    <>
+      <h1>Sign Up</h1>
       <RegistrationForm />
-    </main>
+    </>
   );
 }

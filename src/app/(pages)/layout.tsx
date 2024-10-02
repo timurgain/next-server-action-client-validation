@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "@/app/styles/globals.scss";
+import styles from './layout.module.scss'
 
 import { Comfortaa } from 'next/font/google';
 
@@ -25,7 +26,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={comfortaa.className}>
-        {children}
+        <main className={styles.main}>
+          {children}
+        </main>
       </body>
     </html>
   );

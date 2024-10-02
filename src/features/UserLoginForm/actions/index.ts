@@ -1,15 +1,8 @@
 "use server";
 import { z } from "zod";
 import { Fields, FormState } from "../types";
-import { access } from "fs";
-import { redirect } from "next/navigation";
-import { APP_URL } from "@/app/constants/urls";
 
 const schema = z.object({
-  [Fields.username]: z
-    .string()
-    .min(2, { message: "Username must be at least 2 characters long" })
-    .trim(),
   [Fields.email]: z
     .string()
     .email({ message: "Invalid email address" })
@@ -20,11 +13,10 @@ const schema = z.object({
     .trim(),
 });
 
-export async function createUser(state: FormState, formData: FormData) {
+export async function loginUser(state: FormState, formData: FormData) {
   // 1. Validate form fields
 
   const rowData = {
-    [Fields.username]: formData.get(Fields.username),
     [Fields.email]: formData.get(Fields.email),
     [Fields.password]: formData.get(Fields.password),
   };
@@ -42,6 +34,7 @@ export async function createUser(state: FormState, formData: FormData) {
 
   // 3. Call the backend API
 
+  let mockTokens;
   try {
     // Mock server request
     const request = new Promise((resolve) =>
@@ -49,14 +42,29 @@ export async function createUser(state: FormState, formData: FormData) {
         resolve(data);
       }, 1000)
     );
-    await request;
+    mockTokens = await request;
+    mockTokens = {
+      access: "mock_access_token",
+      refresh: "mock_refresh_token",
+    };
+
   } catch (error) {
     return {
       message: `Registration error: ${error}`,
     };
   }
 
-  // 4. Redirect to sign in page
+  console.log("mock backend response with tokens", mockTokens);
 
-  redirect(APP_URL.SIGN_IN)
+  // create session with token > set cookies > read cookies on request
+
+
+  // 4. Transfer data to the client side
+
+  // the simplest way is a direct transfer
+  // return { mockTokens };
+
+  // TODO:
+  // 4. Create user session
+  // 5. Redirect user
 }

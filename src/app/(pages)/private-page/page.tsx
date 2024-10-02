@@ -1,9 +1,9 @@
-import styles from "./page.module.css";
 
 export default function PrivatePage() {
   return (
-    <main className={styles.main}>
-      PrivatePage
-    </main>
+    <>
+      <h1>PrivatePage</h1>
+      <p>This page should be available only after registration and authentication</p>
+    </>
   );
 }
