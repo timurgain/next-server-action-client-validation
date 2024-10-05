@@ -41,10 +41,11 @@ export async function getAccessToken(state: FormState, formData: FormData) {
     // Mock server request
     mockTokens = await auth_api.getTokens(data)
     await createSession(mockTokens);
-    redirect(APP_URL.PRIVATE);
   } catch (error) {
     return {
       message: `Registration error: ${error}`,
     };
   }
+
+  redirect(APP_URL.PRIVATE);
 }

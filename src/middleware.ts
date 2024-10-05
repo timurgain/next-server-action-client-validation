@@ -7,7 +7,7 @@ const protectedRoutes = [APP_URL.PRIVATE];
 const authRoutes = [APP_URL.SIGN_IN, APP_URL.SIGN_UP];
 
 async function manageRoutesPermissions(request: NextRequest) {
-  const path = request.nextUrl.pathname;  
+  const path = request.nextUrl.pathname;
   const origin = request.nextUrl.origin;
   const isProtectedRoute = protectedRoutes.includes(path);
   const isAuthRoute = authRoutes.includes(path);
@@ -18,19 +18,18 @@ async function manageRoutesPermissions(request: NextRequest) {
   // 2. Read the session cookie
   const cookie = cookies().get("session")?.value;
   const session = await decrypt(cookie);
-  console.log("session at middleware", session);
   
-  // 3. Redirect to the sign-in page if the session is not
+  // 3. To the sign-in page
   const expiresAt = session?.expiresAt;
-  if (!expiresAt) return NextResponse.redirect(origin + APP_URL.SIGN_IN);
+  if (isProtectedRoute && expiresAt === undefined) return NextResponse.redirect(origin + APP_URL.SIGN_IN);
 
-  // 4. Redirect to the sign-in page if the session is expired
-  // ! Implement refresh token instead of this
-  const isAccsessExpired = expiresAt > Date.now() - 5 * 60 * 1000;
-  if (!isAccsessExpired) return NextResponse.redirect(origin + APP_URL.SIGN_IN);
+  // 4. To the sign-in page. Implement refresh token instead of this
+  const isAccsessExpired = (expiresAt ?? 0) < Date.now() - 5*60*1000;
+  if (isProtectedRoute && isAccsessExpired) return NextResponse.redirect(origin + APP_URL.SIGN_IN);
 
-  // 5. Redirect to the main page if the route in authRoutes and the user is authenticated
-  if (authRoutes.includes(path)) return NextResponse.redirect(origin);
+  // 5. To the main page
+  const isUserAuthenticated = session && !isAccsessExpired;
+  if (isUserAuthenticated && isAuthRoute) return NextResponse.redirect(origin + APP_URL.MAIN);
 
   return NextResponse.next();
 }

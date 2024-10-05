@@ -3,6 +3,7 @@ import "@/app/styles/globals.scss";
 import styles from './layout.module.scss'
 
 import { Comfortaa } from 'next/font/google';
+import { UserSignOut } from "@/features/UserSignOut";
 
 const comfortaa = Comfortaa({
   weight: ['300', '400', '500', '600', '700'],
@@ -27,6 +28,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={comfortaa.className}>
         <main className={styles.main}>
+          <UserSignOut />
           {children}
         </main>
       </body>

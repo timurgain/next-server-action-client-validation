@@ -1,19 +1,26 @@
-import styles from './Button.module.scss';
+import styles from "./Button.module.scss";
 
 type Props = {
-  type?: 'button' | 'submit' | 'reset';
+  type?: "button" | "submit" | "reset";
+  formAction?: () => void;
   disabled?: boolean;
   children: React.ReactNode;
-}
+};
 
 export function Button({
-  type = 'button',
+  type = "button",
+  formAction,
   disabled = false,
   children,
 }: Props) {
   return (
-    <button className={styles.button} type={type} disabled={disabled}>
+    <button
+      className={styles.button}
+      type={type}
+      formAction={formAction}
+      disabled={disabled}
+    >
       {children}
     </button>
-  )
+  );
 }
