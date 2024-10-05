@@ -1,19 +1,17 @@
 "use server";
 import { z } from "zod";
 import { Fields, FormState } from "../types";
+import { createSession } from "@/shared/session";
 
 const schema = z.object({
-  [Fields.email]: z
-    .string()
-    .email({ message: "Invalid email address" })
-    .trim(),
+  [Fields.email]: z.string().email({ message: "Invalid email address" }).trim(),
   [Fields.password]: z
     .string()
     .min(4, { message: "Password must be at least 4 characters long" })
     .trim(),
 });
 
-export async function loginUser(state: FormState, formData: FormData) {
+export async function getAccessToken(state: FormState, formData: FormData) {
   // 1. Validate form fields
 
   const rowData = {
@@ -28,7 +26,7 @@ export async function loginUser(state: FormState, formData: FormData) {
     };
   }
 
-  // 2. Prepare data for insertion into database or sending further on the separate backend
+  // 2. Prepare data for sending further on the backend
 
   const data = validatedFields.data;
 
@@ -48,23 +46,10 @@ export async function loginUser(state: FormState, formData: FormData) {
       refresh: "mock_refresh_token",
     };
 
+    await createSession(mockTokens);
   } catch (error) {
     return {
       message: `Registration error: ${error}`,
     };
   }
-
-  console.log("mock backend response with tokens", mockTokens);
-
-  // create session with token > set cookies > read cookies on request
-
-
-  // 4. Transfer data to the client side
-
-  // the simplest way is a direct transfer
-  // return { mockTokens };
-
-  // TODO:
-  // 4. Create user session
-  // 5. Redirect user
 }
