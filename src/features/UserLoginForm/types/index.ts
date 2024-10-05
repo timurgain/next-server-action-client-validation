@@ -1,4 +1,8 @@
-import { SessionPayload } from '@/app/lib/definitions';
+export type Credentials = {
+  email: string;
+  password: string;
+}
+
 export enum Fields {
   email = "email",
   password = "password",

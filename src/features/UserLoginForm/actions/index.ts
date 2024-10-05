@@ -2,6 +2,10 @@
 import { z } from "zod";
 import { Fields, FormState } from "../types";
 import { createSession } from "@/shared/session";
+import { request } from "@/shared/api/backend-server-side";
+import { APP_URL } from "@/app/constants/urls";
+import { auth_api } from "../api";
+import { redirect } from "next/navigation";
 
 const schema = z.object({
   [Fields.email]: z.string().email({ message: "Invalid email address" }).trim(),
@@ -30,23 +34,14 @@ export async function getAccessToken(state: FormState, formData: FormData) {
 
   const data = validatedFields.data;
 
-  // 3. Call the backend API
+  // 3. Call the backend API and create a session
 
   let mockTokens;
   try {
     // Mock server request
-    const request = new Promise((resolve) =>
-      setTimeout(() => {
-        resolve(data);
-      }, 1000)
-    );
-    mockTokens = await request;
-    mockTokens = {
-      access: "mock_access_token",
-      refresh: "mock_refresh_token",
-    };
-
+    mockTokens = await auth_api.getTokens(data)
     await createSession(mockTokens);
+    redirect(APP_URL.PRIVATE);
   } catch (error) {
     return {
       message: `Registration error: ${error}`,
