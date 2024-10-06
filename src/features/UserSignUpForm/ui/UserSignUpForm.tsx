@@ -1,33 +1,33 @@
 "use client";
 
 import { Input } from "@/shared/ui/Input/Input";
-import styles from "./UserLoginForm.module.scss";
+import styles from "./UserSignUpForm.module.scss";
 import { Button } from "@/shared/ui/Button/Button";
-import { getAccessToken } from "../actions";
+import { createUser } from "../actions";
 import { Fields } from "../types";
 import { useFormState, useFormStatus } from "react-dom";
 import { useEffect } from "react";
-import { useUserContext } from "@/app/contexts/userContext";
-import { useRouter } from "next/navigation";
-import { APP_URL } from "@/app/constants/urls";
 
 type Props = {};
 
-export function UserLoginForm({}: Props) {
-  const [state, action] = useFormState(getAccessToken, undefined);
+export function UserSignUpForm({}: Props) {
+  const [state, action] = useFormState(createUser, undefined);
   const { pending } = useFormStatus();
-  const { setIsAuthenticated } = useUserContext();
-  const router = useRouter();
 
   useEffect(() => {
-    if (state?.success) {
-      setIsAuthenticated(true);
-      router.push(APP_URL.PROTECTED);
+    if (state?.message) {
+      alert(state.message);
     }
-  }, [state?.success]);
+  }, [state]);
 
   return (
     <form action={action} className={styles.form} noValidate>
+      <Input
+        name={Fields.username}
+        label="Username"
+        type="text"
+        error={state?.errors?.username}
+      />
       <Input
         name={Fields.email}
         label="Email"
@@ -42,7 +42,7 @@ export function UserLoginForm({}: Props) {
       />
 
       <Button type="submit" disabled={pending}>
-        Sign In
+        Sign Up
       </Button>
     </form>
   );

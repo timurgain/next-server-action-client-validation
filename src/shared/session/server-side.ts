@@ -1,7 +1,7 @@
 import "server-only";
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
-import { SessionPayload, Tokens } from "../../features/UserLoginForm/types";
+import { SessionPayload, Tokens } from "../../features/UserSignInForm/types";
 
 const SESSION = "session";
 const secretKey = process.env.SESSION_SECRET;

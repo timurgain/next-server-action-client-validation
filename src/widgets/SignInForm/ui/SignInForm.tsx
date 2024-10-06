@@ -1,25 +1,24 @@
 "use client";
 
-import styles from "./LoginForm.module.scss";
+import styles from "./SignInForm.module.scss";
 import { RadioFieldset } from "@/shared/ui/RadioFieldset/RadioFieldset";
 import { RadioInput } from "@/shared/ui/RadioInput/RadioInput";
 import { LegalStatuses } from "../types";
 import { useState } from "react";
-import { UserLoginForm } from "@/features/UserLoginForm";
+import { UserSignInForm } from "@/features/UserSignInForm";
 
 type Props = {};
 
-export function LoginForm({}: Props) {
+export function SignInForm({}: Props) {
   const [legalStatus, setLegalStatus] = useState<LegalStatuses>(
     LegalStatuses.user
   );
 
-  const isUser = legalStatus === LegalStatuses.user
-  const isCompany = legalStatus === LegalStatuses.company
+  const isUser = legalStatus === LegalStatuses.user;
+  const isCompany = legalStatus === LegalStatuses.company;
 
   return (
     <section className={styles.section}>
-
       <RadioFieldset legend="Choose a type">
         <RadioInput
           name={LegalStatuses.user}
@@ -41,9 +40,8 @@ export function LoginForm({}: Props) {
         />
       </RadioFieldset>
 
-      {isUser && <UserLoginForm />}
+      {isUser && <UserSignInForm />}
       {isCompany && <p>Not implemented</p>}
-      
     </section>
   );
 }
