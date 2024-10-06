@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getSession } from "../session";
+import { getSession } from "../session/server-side";
 
 async function getAccessToken() {
   const session = await getSession();
@@ -18,8 +18,7 @@ export const request = {
       .then((res) => res.json())
       .catch((error) => {
         throw new Error(`Request error: ${error}`);
-      }
-    );
+      });
   },
 
   post: async <T>(url: string, data: T) => {

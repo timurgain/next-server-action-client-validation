@@ -1,11 +1,8 @@
 "use server";
 import { z } from "zod";
 import { Fields, FormState } from "../types";
-import { createSession } from "@/shared/session";
-import { request } from "@/shared/api/backend-server-side";
-import { APP_URL } from "@/app/constants/urls";
+import { createSession } from "@/shared/session/server-side";
 import { auth_api } from "../api";
-import { redirect } from "next/navigation";
 
 const schema = z.object({
   [Fields.email]: z.string().email({ message: "Invalid email address" }).trim(),
@@ -27,6 +24,7 @@ export async function getAccessToken(state: FormState, formData: FormData) {
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
+      success: false,
     };
   }
 
@@ -39,13 +37,15 @@ export async function getAccessToken(state: FormState, formData: FormData) {
   let mockTokens;
   try {
     // Mock server request
-    mockTokens = await auth_api.getTokens(data)
+    mockTokens = await auth_api.getTokens(data);
     await createSession(mockTokens);
   } catch (error) {
     return {
       message: `Registration error: ${error}`,
+      success: false,
     };
   }
 
-  redirect(APP_URL.PRIVATE);
+  return { success: true };
+  // redirect(APP_URL.PROTECTED);
 }

@@ -1,10 +1,12 @@
 'use server';
 
-import { APP_URL } from "@/app/constants/urls";
-import { destroySession } from "@/shared/session";
-import { redirect } from "next/navigation";
+import { destroySession } from "@/shared/session/server-side";
 
 export async function signOut() {
-  destroySession();
-  redirect(APP_URL.MAIN);
+  try {
+    await destroySession();
+    return { success: true };
+  } catch {
+    return { success: false };
+  }
 }

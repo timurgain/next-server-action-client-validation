@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { decrypt } from "./shared/session";
+import {
+  decrypt,
+  getSession,
+  isAccessTokenExpired,
+} from "./shared/session/server-side";
 import { APP_URL } from "./app/constants/urls";
 
-const protectedRoutes = [APP_URL.PRIVATE];
+const protectedRoutes = [APP_URL.PROTECTED];
 const authRoutes = [APP_URL.SIGN_IN, APP_URL.SIGN_UP];
 
 async function manageRoutesPermissions(request: NextRequest) {
@@ -16,29 +20,29 @@ async function manageRoutesPermissions(request: NextRequest) {
   if (!isProtectedRoute && !isAuthRoute) return NextResponse.next();
 
   // 2. Read the session cookie
-  const cookie = cookies().get("session")?.value;
-  const session = await decrypt(cookie);
-  
+  const session = await getSession();
+
   // 3. To the sign-in page
   const expiresAt = session?.expiresAt;
-  if (isProtectedRoute && expiresAt === undefined) return NextResponse.redirect(origin + APP_URL.SIGN_IN);
+  if (isProtectedRoute && expiresAt === undefined)
+    return NextResponse.redirect(origin + APP_URL.SIGN_IN);
 
   // 4. To the sign-in page. Implement refresh token instead of this
-  const isAccsessExpired = (expiresAt ?? 0) < Date.now() - 5*60*1000;
-  if (isProtectedRoute && isAccsessExpired) return NextResponse.redirect(origin + APP_URL.SIGN_IN);
+  const isExpired = isAccessTokenExpired(expiresAt);
+  if (isProtectedRoute && isExpired)
+    return NextResponse.redirect(origin + APP_URL.SIGN_IN);
 
   // 5. To the main page
-  const isUserAuthenticated = session && !isAccsessExpired;
-  if (isUserAuthenticated && isAuthRoute) return NextResponse.redirect(origin + APP_URL.MAIN);
+  const isUserAuthenticated = session && !isExpired;
+  if (isUserAuthenticated && isAuthRoute)
+    return NextResponse.redirect(origin + APP_URL.MAIN);
 
   return NextResponse.next();
 }
 
-
 export default async function middleware(request: NextRequest) {
   return await manageRoutesPermissions(request);
 }
-
 
 export const config = {
   matcher: [
@@ -49,6 +53,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico, sitemap.xml, robots.txt (metadata files)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
   ],
-}
+};

@@ -6,12 +6,25 @@ import { Button } from "@/shared/ui/Button/Button";
 import { getAccessToken } from "../actions";
 import { Fields } from "../types";
 import { useFormState, useFormStatus } from "react-dom";
+import { useEffect } from "react";
+import { useUserContext } from "@/app/contexts/userContext";
+import { useRouter } from "next/navigation";
+import { APP_URL } from "@/app/constants/urls";
 
 type Props = {};
 
 export function UserLoginForm({}: Props) {
   const [state, action] = useFormState(getAccessToken, undefined);
   const { pending } = useFormStatus();
+  const { setIsAuthenticated } = useUserContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state?.success) {
+      setIsAuthenticated(true);
+      router.push(APP_URL.PROTECTED);
+    }
+  }, [state?.success]);
 
   return (
     <form action={action} className={styles.form} noValidate>
@@ -29,7 +42,7 @@ export function UserLoginForm({}: Props) {
       />
 
       <Button type="submit" disabled={pending}>
-        Sing In
+        Sign In
       </Button>
     </form>
   );

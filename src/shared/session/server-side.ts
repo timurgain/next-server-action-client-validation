@@ -49,3 +49,7 @@ export async function getSession() {
 export async function destroySession() {
   cookies().delete(SESSION);
 }
+
+export function isAccessTokenExpired(expiresAt: number | undefined) {
+  return expiresAt ? expiresAt < Date.now() - 5 * 60 * 1000 : true;
+}
