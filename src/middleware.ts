@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import {
-  decrypt,
-  getSession,
-  isAccessTokenExpired,
-} from "./shared/session/server-side";
+import { getSession, isAccessTokenExpired } from "./shared/session/server-side";
 import { APP_URL } from "./app/constants/urls";
 
 const protectedRoutes = [APP_URL.PROTECTED];
