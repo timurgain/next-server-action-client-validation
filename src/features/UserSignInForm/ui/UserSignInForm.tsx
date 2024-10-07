@@ -22,7 +22,7 @@ export function UserSignInForm({}: Props) {
   useEffect(() => {
     if (state?.success) {
       setIsAuthenticated(true);
-      router.push(APP_URL.PROTECTED);
+      router.replace(APP_URL.PROTECTED);
     }
   }, [state?.success]);
 
