@@ -2,7 +2,10 @@
 
 ## Description
 
-Demo auth features with Next.js and Server Actions
+Demo Auth features based on Next.js 14 Server Actions. It includes two versions of Sign Up forms with:
+
+- client-side validation using React Hook Form and Zod,
+- server-side validation using Zod.
 
 ## Technologies
 
@@ -10,6 +13,7 @@ Demo auth features with Next.js and Server Actions
 - Next.js 14
 - Server Actions
 - React useContext
+- React Hook Form
 - Zod
 - SCSS
 - ...
